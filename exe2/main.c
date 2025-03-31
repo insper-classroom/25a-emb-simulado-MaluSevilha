@@ -23,8 +23,8 @@ volatile uint32_t stop_us1;
 volatile uint32_t start_us2; 
 volatile uint32_t stop_us2;
 
-volatile alarm_id_t alarm1;
-volatile alarm_id_t alarm2;
+alarm_id_t alarm1;
+alarm_id_t alarm2;
 
 void pulso_trigger(int TRIGGER){
     gpio_put(TRIGGER, 1);
@@ -105,14 +105,14 @@ int main() {
 
         while(stop_us2 == 0 && timer_fired2 == false){}
 
-        if (timer_fired1 == 0){
+        if (timer_fired1 == false){
             dist1 = (int)((stop_us1 - start_us1)*0.0343)/2;
             printf("Sensor 1 - %d cm\n", dist1);
         } else {
             printf("Sensor 1 - dist: erro\n");
         }
 
-        if (timer_fired2 == 0){
+        if (timer_fired2 == false){
             dist2 = (int)((stop_us2 - start_us2)*0.0343)/2;
             printf("Sensor 2 - %d cm\n", dist2);
         } else {
