@@ -23,13 +23,12 @@ volatile uint32_t stop_us1;
 volatile uint32_t start_us2; 
 volatile uint32_t stop_us2;
 
-alarm_id_t alarm1;
-alarm_id_t alarm2;
-
 void pulso_trigger(int TRIGGER){
-    gpio_put(TRIGGER, 1);
+    gpio_put(TRIGGER1, 1);
+    gpio_put(TRIGGER2, 1);
     sleep_us(10);
-    gpio_put(TRIGGER, 0);
+    gpio_put(TRIGGER1, 0);
+    gpio_put(TRIGGER2, 0);
     sleep_us(2);
 }
 
@@ -39,7 +38,6 @@ void echo_callback(uint gpio, uint32_t events) {
             stop_us1 = get_absolute_time();
         } else if (events == 0x8) { 
             start_us1 = get_absolute_time();
-            cancel_alarm(alarm1);
         }
     } 
     
@@ -48,7 +46,6 @@ void echo_callback(uint gpio, uint32_t events) {
             stop_us2 = get_absolute_time();
         } else if (events == 0x8) { 
             start_us2 = get_absolute_time();
-            cancel_alarm(alarm2);
         }
     }
 }
@@ -82,6 +79,9 @@ int main() {
     gpio_set_dir(ECHO2, GPIO_IN);
     gpio_set_irq_enabled_with_callback(ECHO2, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &echo_callback);
 
+    alarm_id_t alarm1;
+    alarm_id_t alarm2;
+
     while (true) {
         int dist1;
         int dist2;
@@ -95,8 +95,7 @@ int main() {
 
         sleep_us(100);
 
-        pulso_trigger(TRIGGER1);
-        pulso_trigger(TRIGGER2);
+        pulso_trigger();
 
         alarm1 = add_alarm_in_ms(20, alarm1_callback, NULL, false);
         alarm2 = add_alarm_in_ms(20, alarm2_callback, NULL, false);
