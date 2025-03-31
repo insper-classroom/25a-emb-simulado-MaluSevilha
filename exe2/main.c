@@ -107,7 +107,6 @@ int main() {
 
         if (timer_fired1 == 0){
             dist1 = (int)((stop_us1 - start_us1)*0.0343)/2;
-            cancel_alarm(alarm1);
             printf("Sensor 1 - %d cm\n", dist1);
         } else {
             printf("Sensor 1 - dist: erro\n");
