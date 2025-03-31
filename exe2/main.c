@@ -106,16 +106,16 @@ int main() {
 
         if (timer_fired1 == false){
             dist1 = (int)((stop_us1 - start_us1)*0.0343)/2;
-            printf("Sensor 1 - %d cm\n", dist1);
+            printf("Sensor 1 - dist: %d cm\n", dist1);
         } else {
-            printf("Sensor 1 - dist: erro\n");
+            printf("Sensor 1 - dist: falha\n");
         }
 
         if (timer_fired2 == false){
             dist2 = (int)((stop_us2 - start_us2)*0.0343)/2;
-            printf("Sensor 2 - %d cm\n", dist2);
+            printf("Sensor 2 - dist: %d cm\n", dist2);
         } else {
-            printf("Sensor 2 - dist: erro\n");
+            printf("Sensor 2 - dist: falha\n");
         }
 
         cancel_alarm(alarm1);
