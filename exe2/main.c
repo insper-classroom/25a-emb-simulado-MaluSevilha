@@ -110,14 +110,14 @@ int main() {
             cancel_alarm(alarm1);
             printf("Sensor 1 - %d cm\n", dist1);
         } else {
-            printf("Sensor 1 - falha \n");
+            printf("Sensor 1 - dist: erro\n");
         }
 
         if (timer_fired2 == 0){
             dist2 = (int)((stop_us2 - start_us2)*0.0343)/2;
             printf("Sensor 2 - %d cm\n", dist2);
         } else {
-            printf("Sensor 2 - falha \n");
+            printf("Sensor 2 - dist: erro\n");
         }
 
         cancel_alarm(alarm1);
