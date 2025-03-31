@@ -16,7 +16,8 @@ const int ECHO1 = 18;
 const int TRIGGER2 = 13;
 const int ECHO2 = 12;
 
-volatile bool timer_fired1 = false, timer_fired2 = false;
+volatile bool timer_fired1 = false;
+volatile bool timer_fired2 = false;
 volatile uint32_t start_us1, stop_us1, start_us2, stop_us2;
 
 void pulso_trigger(int TRIGGER){
@@ -73,7 +74,8 @@ int main() {
     gpio_set_irq_enabled_with_callback(ECHO2, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &echo_callback);
 
     while (true) {
-        int dist1, dist2;
+        int dist1;
+        int dist2;
 
         timer_fired1 = false;    
         timer_fired2 = false;
