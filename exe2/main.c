@@ -71,7 +71,7 @@ int main() {
     gpio_set_irq_enabled_with_callback(ECHO2, GPIO_IRQ_EDGE_FALL | GPIO_IRQ_EDGE_RISE, true, &echo_callback);
 
     while (true) {
-        double dist;
+        double dist1, dist2;
 
         pulso_trigger(TRIGGER1);
         alarm1 = add_alarm_in_ms(500, alarm1_callback, NULL, false);
@@ -79,22 +79,20 @@ int main() {
         pulso_trigger(TRIGGER2);
         alarm2 = add_alarm_in_ms(500, alarm2_callback, NULL, false);
 
-        while((stop_us1 == 0 || stop_us2 == 0) && (timer_fired1 == false || timer_fired2 == false)){}
+        while((stop_us1 == 0 || stop_us2 == 0) && timer_fired1 == false && timer_fired2 == false){}
 
-        if (!timer_fired1){
-            dist = ((stop_us1 - start_us1)*0.0343)/2;
+        if (!timer_fired1 && !timer_fired2){
+            dist1 = ((stop_us1 - start_us1)*0.0343)/2;
+            dist2 = ((stop_us2 - start_us2)*0.0343)/2;
+
             cancel_alarm(alarm1);
-            printf("Sensor 1 - %.0f cm\n", dist);
-        } else {
-            printf("Sensor 1 - FALHA \n");
-        }
-
-        if (!timer_fired2){
-            dist = ((stop_us2 - start_us2)*0.0343)/2;
             cancel_alarm(alarm2);
-            printf("Sensor 2 - %.0f cm\n", dist);
+
+            printf("Sensor 1 - %.0f cm\n", dist1);
+            printf("Sensor 2 - %.0f cm\n", dist2);
         } else {
-            printf("Sensor 2 - FALHA \n");
+            printf("Sensor 1 - falha \n");
+            printf("Sensor 2 - falha \n");
         }
 
         timer_fired1 = false;    
