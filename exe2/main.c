@@ -23,7 +23,7 @@ volatile uint32_t stop_us1;
 volatile uint32_t start_us2; 
 volatile uint32_t stop_us2;
 
-void pulso_trigger(int TRIGGER){
+void pulso_trigger(){
     gpio_put(TRIGGER1, 1);
     gpio_put(TRIGGER2, 1);
     sleep_us(10);
