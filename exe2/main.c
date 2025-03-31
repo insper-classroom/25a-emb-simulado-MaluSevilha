@@ -33,7 +33,9 @@ void echo_callback(uint gpio, uint32_t events) {
         } else if (events == 0x8) { 
             start_us1 = to_us_since_boot(get_absolute_time());
         }
-    } else if (gpio == ECHO2){
+    } 
+    
+    if (gpio == ECHO2){
         if (events == 0x4) { 
             stop_us2 = to_us_since_boot(get_absolute_time());
         } else if (events == 0x8) { 
@@ -73,32 +75,42 @@ int main() {
     while (true) {
         double dist1, dist2;
 
-        pulso_trigger(TRIGGER1);
-        alarm1 = add_alarm_in_ms(500, alarm1_callback, NULL, false);
-
-        pulso_trigger(TRIGGER2);
-        alarm2 = add_alarm_in_ms(500, alarm2_callback, NULL, false);
-
-        while((stop_us1 == 0 || stop_us2 == 0) && timer_fired1 == false && timer_fired2 == false){}
-
-        if (!timer_fired1 && !timer_fired2){
-            dist1 = ((stop_us1 - start_us1)*0.0343)/2;
-            dist2 = ((stop_us2 - start_us2)*0.0343)/2;
-
-            cancel_alarm(alarm1);
-            cancel_alarm(alarm2);
-
-            printf("Sensor 1 - %.0f cm\n", dist1);
-            printf("Sensor 2 - %.0f cm\n", dist2);
-        } else {
-            printf("Sensor 1 - falha \n");
-            printf("Sensor 2 - falha \n");
-        }
-
         timer_fired1 = false;    
         timer_fired2 = false;
         stop_us1 = 0;
         stop_us2 = 0;
+        start_us1 = 0;
+        start_us2 = 0;
+
+        sleep_us(100);
+
+        pulso_trigger(TRIGGER1);
+        alarm1 = add_alarm_in_ms(20, alarm1_callback, NULL, false);
+
+        pulso_trigger(TRIGGER2);
+        alarm2 = add_alarm_in_ms(20, alarm2_callback, NULL, false);
+
+        while(stop_us1 == 0 && timer_fired1 == false){}
+
+        while(stop_us2 == 0 && timer_fired2 == false){}
+
+        if (!timer_fired1){
+            dist1 = ((stop_us1 - start_us1)*0.0343)/2;
+            cancel_alarm(alarm1);
+            printf("Sensor 1 - %.0f cm\n", dist1);
+        } else {
+            printf("Sensor 1 - falha \n");
+        }
+
+        if (!timer_fired2){
+            dist2 = ((stop_us2 - start_us2)*0.0343)/2;
+            printf("Sensor 2 - %.0f cm\n", dist2);
+        } else {
+            printf("Sensor 2 - falha \n");
+        }
+        
+        cancel_alarm(alarm1);
+        cancel_alarm(alarm2);
     }
 
     return 0;
